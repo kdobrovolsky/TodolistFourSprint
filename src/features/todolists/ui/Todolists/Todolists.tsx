@@ -4,16 +4,13 @@ import { TodolistItem } from "./TodolistItem/TodolistItem"
 import Grid from "@mui/material/Grid2"
 import Paper from "@mui/material/Paper"
 import { useEffect } from "react"
-import { fetchTodolist, selectTodolists } from "@/features/todolists/model/todolists-slice.ts"
-import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
+import { fetchTodolistsTC, selectTodolists } from "@/features/todolists/model/todolists-slice.ts"
 
 export const Todolists = () => {
   const todolists = useAppSelector(selectTodolists)
   const dispatch = useAppDispatch()
   useEffect(() => {
-    todolistsApi.getTodolists().then(res => {
-      dispatch(fetchTodolist({ todolists: res.data }))
-    })
+    dispatch(fetchTodolistsTC())
   }, [])
   return (
     <>
