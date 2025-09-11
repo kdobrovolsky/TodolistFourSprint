@@ -13,12 +13,13 @@ export const todolistsSlice = createAppSlice({
             const res = await todolistsApi.getTodolists()
             return { todolists: res.data }
           } catch (error) {
-            return thunkAPI.rejectWithValue(null)
+            console.error("Failed to fetch todolists:", error)
+            return thunkAPI.rejectWithValue(error)
           }
         },
         {
           fulfilled: (state, action) => {
-            action.payload?.todolists.forEach((tl) => {
+            action.payload.todolists.forEach((tl) => {
               state.push({ ...tl, filter: "all" })
             })
           },
