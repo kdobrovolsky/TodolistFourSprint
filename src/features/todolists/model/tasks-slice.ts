@@ -1,12 +1,11 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { createTodolistTC, deleteTodolistTC } from "./todolists-slice.ts"
+import { nanoid } from "@reduxjs/toolkit"
+import { createAppSlice } from "@/common/utils/createAppSlice.ts"
 
-export const tasksSlice = createSlice({
+export const tasksSlice = createAppSlice({
   name: "tasks",
   initialState: {} as TasksState,
   reducers: (create) => {
     return {
-
       deleteTaskAC: create.reducer<{ todolistId: string; taskId: string }>((state, action) => {
         const tasks = state[action.payload.todolistId]
         const index = tasks.findIndex((task) => task.id === action.payload.taskId)
