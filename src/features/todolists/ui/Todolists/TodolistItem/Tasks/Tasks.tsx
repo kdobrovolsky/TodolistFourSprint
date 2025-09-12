@@ -17,9 +17,7 @@
     const tasks = useAppSelector(selectTasks)
     const dispatch = useAppDispatch()
 
-    console.log('All tasks:', tasks)
-    console.log('Tasks for todolist', id, ':', tasks[id])
-    console.log('Todolist IDs in state:', Object.keys(tasks))
+
 
     useEffect(() => {
       console.log('Fetching tasks for:', id)
@@ -38,9 +36,7 @@
 
     return (
       <>
-        <button onClick={() => dispatch(fetchTasksTC(id))}>
-          Force reload tasks
-        </button>
+
         {filteredTasks?.length === 0 ? (
           <p>Тасок нет</p>
         ) : (
