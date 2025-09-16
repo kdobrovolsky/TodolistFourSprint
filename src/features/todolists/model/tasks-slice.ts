@@ -114,12 +114,47 @@ export const tasksSlice = createAppSlice({
         },
       ),
 
-      changeTaskTitleAC: create.reducer<{ todolistId: string; taskId: string; title: string }>((state, action) => {
-        const task = state[action.payload.todolistId].find((task) => task.id === action.payload.taskId)
-        if (task) {
-          task.title = action.payload.title
-        }
-      }),
+
+      changeTaskTitleTC: create.asyncThunk(
+          async (payload: { todolistId: string; taskId: string; title: string }, thunkAPI) => {
+            const{dispatch,rejectWithValue} = thunkAPI
+            try {
+              dispatch(setAppStatusAC({ status: 'loading' }))
+              const state =  thunkAPI.getState() as RootState
+              const allTasks = state.tasks
+              const TaskForTodolist = allTasks[payload.todolistId]
+              const task = TaskForTodolist.find(el => el.id === payload.taskId)
+
+              if(task) {
+                const model: UpdateTaskModel = {
+                  description: task.description,
+                  title: task.title,
+                  status: task.status,
+                  priority: TaskPriority.Low,
+                  startDate: task.startDate,
+                  deadline: task.deadline,
+                }
+
+                await tasksApi.updateTask({ todolistId: payload.todolistId, taskId: payload.taskId, model })
+                dispatch(setAppStatusAC({ status: 'succeeded' }))
+                return payload
+              }else {
+                dispatch(setAppStatusAC({ status: 'failed' }))
+                return rejectWithValue(null)
+              }
+            } catch (error) {
+              return thunkAPI.rejectWithValue(error)
+            }
+          },
+          {
+            fulfilled: (state, action) => {
+              const task = state[action.payload.todolistId].find((task) => task.id === action.payload.taskId)
+              if (task) {
+                task.title = action.payload.title
+              }
+            },
+          },
+      ),
     }
   },
   extraReducers: (builder) => {
@@ -136,7 +171,7 @@ export const tasksSlice = createAppSlice({
   },
 })
 
-export const { deleteTaskTC, createTaskTC, changeTaskStatusTC, changeTaskTitleAC, fetchTasksTC } = tasksSlice.actions
+export const { deleteTaskTC, createTaskTC, changeTaskStatusTC, changeTaskTitleTC, fetchTasksTC } = tasksSlice.actions
 export const tasksReducer = tasksSlice.reducer
 export const { selectTasks } = tasksSlice.selectors
 

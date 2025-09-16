@@ -17,7 +17,7 @@ export const todolistsSlice = createAppSlice({
             dispatch(setAppStatusAC({ status: 'succeeded' }))
             return { todolists: res.data }
           } catch (error) {
-            console.error("Failed to fetch todolists:", error)
+            dispatch(setAppStatusAC({ status: 'failed' }))
             return rejectWithValue(error)
           }
         },
@@ -38,12 +38,14 @@ export const todolistsSlice = createAppSlice({
             dispatch(setAppStatusAC({ status: 'succeeded' }))
             return res.data.data.item
           } catch (error) {
+            dispatch(setAppStatusAC({ status: 'failed' }))
             return rejectWithValue(error)
           }
         },
         {
           fulfilled: (state, action) => {
-            state.unshift({ ...action.payload, filter: "all", addedDate: "", order: 0 })
+
+            state.unshift({ ...action.payload, filter: "all" })
           },
         },
       ),
@@ -56,6 +58,7 @@ export const todolistsSlice = createAppSlice({
             dispatch(setAppStatusAC({ status: 'succeeded' }))
             return { id }
           } catch (error) {
+            dispatch(setAppStatusAC({ status: 'failed' }))
             return rejectWithValue(error)
           }
         },
