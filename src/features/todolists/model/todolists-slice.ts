@@ -1,6 +1,7 @@
 import { Todolist } from "@/features/todolists/api/todolistsApi.types.ts"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
 import { createAppSlice } from "@/common/utils/createAppSlice.ts"
+import { setAppStatusAC } from "@/app/app-slice.ts"
 
 export const todolistsSlice = createAppSlice({
   name: "todolists",
@@ -9,12 +10,15 @@ export const todolistsSlice = createAppSlice({
     return {
       fetchTodolistsTC: create.asyncThunk(
         async (_, thunkAPI) => {
+          const {dispatch,rejectWithValue} = thunkAPI
           try {
+           dispatch(setAppStatusAC({ status: 'loading' }))
             const res = await todolistsApi.getTodolists()
+            dispatch(setAppStatusAC({ status: 'succeeded' }))
             return { todolists: res.data }
           } catch (error) {
             console.error("Failed to fetch todolists:", error)
-            return thunkAPI.rejectWithValue(error)
+            return rejectWithValue(error)
           }
         },
         {
@@ -27,11 +31,14 @@ export const todolistsSlice = createAppSlice({
       ),
       createTodolistTC: create.asyncThunk(
         async (title: string, thunkAPI) => {
+          const {dispatch,rejectWithValue} = thunkAPI
           try {
+            dispatch(setAppStatusAC({ status: 'loading' }))
             const res = await todolistsApi.createTodolist(title)
+            dispatch(setAppStatusAC({ status: 'succeeded' }))
             return res.data.data.item
           } catch (error) {
-            return thunkAPI.rejectWithValue(error)
+            return rejectWithValue(error)
           }
         },
         {
@@ -42,11 +49,14 @@ export const todolistsSlice = createAppSlice({
       ),
       deleteTodolistTC: create.asyncThunk(
         async (id: string, thunkAPI) => {
+          const {dispatch,rejectWithValue} = thunkAPI
           try {
+            dispatch(setAppStatusAC({ status: 'loading' }))
             await todolistsApi.deleteTodolist(id)
+            dispatch(setAppStatusAC({ status: 'succeeded' }))
             return { id }
           } catch (error) {
-            return thunkAPI.rejectWithValue(error)
+            return rejectWithValue(error)
           }
         },
         {
