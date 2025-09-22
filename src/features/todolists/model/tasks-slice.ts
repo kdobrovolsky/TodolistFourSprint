@@ -46,7 +46,7 @@ export const tasksSlice = createAppSlice({
             }
           } catch (error) {
             handleServerNetworkError(error, dispatch)
-            return rejectWithValue(null)
+            return rejectWithValue(error)
           }
         },
         {
@@ -90,7 +90,6 @@ export const tasksSlice = createAppSlice({
           { dispatch, getState, rejectWithValue },
         ) => {
           const { todolistId, taskId, domainModel } = payload
-
           const allTodolistTasks = (getState() as RootState).tasks[todolistId]
           const task = allTodolistTasks.find((task) => task.id === taskId)
 
@@ -111,11 +110,16 @@ export const tasksSlice = createAppSlice({
           try {
             dispatch(setAppStatusAC({ status: "loading" }))
             const res = await tasksApi.updateTask({ todolistId, taskId, model })
-            dispatch(setAppStatusAC({ status: "succeeded" }))
-            return { task: res.data.data.item }
+            if (res.data.resultCode === ResultCode.Success) {
+              dispatch(setAppStatusAC({ status: "succeeded" }))
+              return { task: res.data.data.item }
+            } else {
+              handleServerAppError(res.data, dispatch)
+              return rejectWithValue(null)
+            }
           } catch (error) {
-            dispatch(setAppStatusAC({ status: "failed" }))
-            return rejectWithValue(null)
+            handleServerNetworkError(error, dispatch)
+            return rejectWithValue(error)
           }
         },
         {
