@@ -21,7 +21,7 @@ export const TodolistItem = ({ todolist }: Props) => {
     <div>
       <TodolistTitle todolist={todolist} />
       <CreateItemForm onCreateItem={createTask} disabled = {todolist.entityStatus === 'loading'} />
-      <Tasks todolist={todolist} />
+      <Tasks todolist={todolist}  />
       <FilterButtons todolist={todolist} />
     </div>
   )

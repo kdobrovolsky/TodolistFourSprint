@@ -6,6 +6,7 @@ import { RequestStatus } from "@/common/types"
 import { ResultCode } from "@/common/enums"
 import { handleServerAppError } from "@/common/utils/handleServerAppError.ts"
 import { handleServerNetworkError } from "@/common/utils/handleServerNetworkError.ts"
+import { changeTaskStatusAC } from "@/features/todolists/model/tasks-slice.ts"
 
 export const todolistsSlice = createAppSlice({
   name: "todolists",
@@ -65,6 +66,7 @@ export const todolistsSlice = createAppSlice({
           try {
             dispatch(setAppStatusAC({ status: "loading" }))
             dispatch(changeTodolistStatusAC({ id, status: "loading" }))
+            dispatch(changeTaskStatusAC({ todolistId: id, status: "loading" }))
             const res = await todolistsApi.deleteTodolist(id)
             if (res.data.resultCode === ResultCode.Success) {
               dispatch(setAppStatusAC({ status: "succeeded" }))
