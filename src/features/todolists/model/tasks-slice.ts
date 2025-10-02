@@ -6,7 +6,6 @@ import { RootState } from "@/app/store.ts"
 import { setAppStatusAC } from "@/app/app-slice.ts"
 import { handleServerNetworkError } from "@/common/utils/handleServerNetworkError.ts"
 import { handleServerAppError } from "@/common/utils/handleServerAppError.ts"
-import { RequestStatus } from "@/common/types"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -62,7 +61,6 @@ export const tasksSlice = createAppSlice({
           const { dispatch, rejectWithValue } = thunkAPI
           try {
             dispatch(setAppStatusAC({ status: "loading" }))
-            dispatch(changeTaskStatusAC({ todolistId: payload.todolistId, status: "loading" }))
             const res = await tasksApi.deleteTask(payload)
             if (res.data.resultCode === ResultCode.Success) {
               dispatch(setAppStatusAC({ status: "succeeded" }))
@@ -112,7 +110,6 @@ export const tasksSlice = createAppSlice({
 
           try {
             dispatch(setAppStatusAC({ status: "loading" }))
-            dispatch(changeTaskStatusAC({ todolistId: payload.todolistId, status: "loading" }))
             const res = await tasksApi.updateTask({ todolistId, taskId, model })
             if (res.data.resultCode === ResultCode.Success) {
               dispatch(setAppStatusAC({ status: "succeeded" }))
@@ -136,19 +133,6 @@ export const tasksSlice = createAppSlice({
           },
         },
       ),
-      changeTaskStatusAC: create.reducer<{
-        todolistId: string
-        status: RequestStatus
-      }>((state, action) => {
-        const { todolistId, status } = action.payload
-        const tasks = state[todolistId]
-
-        if (tasks) {
-          tasks.forEach((task) => {
-            task.entityStatus = status
-          })
-        }
-      }),
     }
   },
   selectors: {
@@ -156,7 +140,7 @@ export const tasksSlice = createAppSlice({
   },
 })
 
-export const { deleteTaskTC, createTaskTC, updateTaskTC, fetchTasksTC, changeTaskStatusAC } = tasksSlice.actions
+export const { deleteTaskTC, createTaskTC, updateTaskTC, fetchTasksTC } = tasksSlice.actions
 export const tasksReducer = tasksSlice.reducer
 export const { selectTasks } = tasksSlice.selectors
 
