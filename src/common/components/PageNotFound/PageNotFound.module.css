@@ -1,3 +1,4 @@
+/* PageNotFound.module.css */
 .title {
     text-align: center;
     font-size: 250px;
@@ -10,3 +11,11 @@
     margin: 0;
     text-transform: uppercase;
 }
+
+
+.buttonContainer {
+    text-align: center;
+    margin-top: 40px;
+}
+
+
