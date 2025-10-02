@@ -1,6 +1,6 @@
 import { createAppSlice } from "@/common/utils/createAppSlice.ts"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
-import { DomainTask, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types.ts"
+import { DomainTask, domainTaskSchema, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types.ts"
 import { ResultCode } from "@/common/enums"
 import { RootState } from "@/app/store.ts"
 import { setAppStatusAC } from "@/app/app-slice.ts"
@@ -18,10 +18,12 @@ export const tasksSlice = createAppSlice({
           try {
             dispatch(setAppStatusAC({ status: "loading" }))
             const res = await tasksApi.getTasks(todolistId)
+            domainTaskSchema.array().parse(res.data.items)
             dispatch(setAppStatusAC({ status: "succeeded" }))
             return { todolistId, tasks: res.data.items }
           } catch (error) {
-            dispatch(setAppStatusAC({ status: "failed" }))
+            handleServerNetworkError(error, dispatch)
+            console.log(error)
             return rejectWithValue(error)
           }
         },
