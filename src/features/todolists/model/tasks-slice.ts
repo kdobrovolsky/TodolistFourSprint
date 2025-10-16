@@ -22,7 +22,7 @@ export const tasksSlice = createAppSlice({
             dispatch(setAppStatusAC({ status: "succeeded" }))
             return { todolistId, tasks: res.data.items }
           } catch (error) {
-            handleServerNetworkError(error, dispatch)
+            handleServerNetworkError(dispatch, error)
             console.log(error)
             return rejectWithValue(error)
           }
@@ -41,14 +41,15 @@ export const tasksSlice = createAppSlice({
 
             const res = await tasksApi.createTask(payload)
             if (res.data.resultCode === ResultCode.Success) {
+              const validatedTask = domainTaskSchema.parse(res.data.data.item)
               dispatch(setAppStatusAC({ status: "succeeded" }))
-              return { task: res.data.data.item }
+              return { task: validatedTask }
             } else {
               handleServerAppError(res.data, dispatch)
               return rejectWithValue(null)
             }
           } catch (error) {
-            handleServerNetworkError(error, dispatch)
+            handleServerNetworkError(dispatch, error)
             return rejectWithValue(error)
           }
         },
@@ -72,7 +73,7 @@ export const tasksSlice = createAppSlice({
               return rejectWithValue(null)
             }
           } catch (error) {
-            handleServerNetworkError(error, dispatch)
+            handleServerNetworkError(dispatch, error)
             return rejectWithValue(error)
           }
         },
@@ -114,14 +115,15 @@ export const tasksSlice = createAppSlice({
             dispatch(setAppStatusAC({ status: "loading" }))
             const res = await tasksApi.updateTask({ todolistId, taskId, model })
             if (res.data.resultCode === ResultCode.Success) {
+              const validatedTask = domainTaskSchema.parse(res.data.data.item)
               dispatch(setAppStatusAC({ status: "succeeded" }))
-              return { task: res.data.data.item }
+              return { task: validatedTask }
             } else {
               handleServerAppError(res.data, dispatch)
               return rejectWithValue(null)
             }
           } catch (error) {
-            handleServerNetworkError(error, dispatch)
+            handleServerNetworkError(dispatch, error)
             return rejectWithValue(error)
           }
         },

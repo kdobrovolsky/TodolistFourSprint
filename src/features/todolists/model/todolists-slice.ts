@@ -1,4 +1,4 @@
-import { Todolist } from "@/features/todolists/api/todolistsApi.types.ts"
+import { domainTodolistSchema, Todolist } from "@/features/todolists/api/todolistsApi.types.ts"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
 import { createAppSlice } from "@/common/utils/createAppSlice.ts"
 import { setAppErrorAC, setAppStatusAC } from "@/app/app-slice.ts"
@@ -18,8 +18,9 @@ export const todolistsSlice = createAppSlice({
           try {
             dispatch(setAppStatusAC({ status: "loading" }))
             const res = await todolistsApi.getTodolists()
+            const validatedTodolists = domainTodolistSchema.array().parse(res.data)
             dispatch(setAppStatusAC({ status: "succeeded" }))
-            return { todolists: res.data }
+            return { todolists: validatedTodolists }
           } catch (error) {
             dispatch(setAppStatusAC({ status: "failed" }))
             return rejectWithValue(error)
@@ -40,6 +41,7 @@ export const todolistsSlice = createAppSlice({
             dispatch(setAppStatusAC({ status: "loading" }))
             const res = await todolistsApi.createTodolist(title)
             if (res.data.resultCode === ResultCode.Success) {
+              domainTodolistSchema.parse(res.data.data.item)
               dispatch(setAppStatusAC({ status: "succeeded" }))
               return res.data.data.item
             } else {
@@ -67,6 +69,7 @@ export const todolistsSlice = createAppSlice({
             dispatch(changeTodolistStatusAC({ id, status: "loading" }))
             const res = await todolistsApi.deleteTodolist(id)
             if (res.data.resultCode === ResultCode.Success) {
+              domainTodolistSchema.parse(res.data)
               dispatch(setAppStatusAC({ status: "succeeded" }))
               return { id }
             } else {
@@ -74,7 +77,7 @@ export const todolistsSlice = createAppSlice({
               return rejectWithValue(null)
             }
           } catch (error) {
-            handleServerNetworkError(error, dispatch)
+            handleServerNetworkError(dispatch, error)
             return rejectWithValue(error)
           }
         },
@@ -95,6 +98,7 @@ export const todolistsSlice = createAppSlice({
             const res = await todolistsApi.changeTodolistTitle(arg)
 
             if (res.data.resultCode === ResultCode.Success) {
+              domainTodolistSchema.array().parse(res.data)
               dispatch(setAppStatusAC({ status: "succeeded" }))
               return arg
             } else {
@@ -102,7 +106,7 @@ export const todolistsSlice = createAppSlice({
               return rejectWithValue(null)
             }
           } catch (error) {
-            handleServerNetworkError(error, dispatch)
+            handleServerNetworkError(dispatch, error)
             return rejectWithValue(error)
           }
         },

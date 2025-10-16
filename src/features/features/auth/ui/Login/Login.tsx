@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField"
 import { Controller, useForm } from "react-hook-form"
 import s from "./Login.module.css"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { LoginInputs, loginSchema } from "@/features/auth/lib/schemas/schemas.ts"
+import { LoginInputs, loginSchema } from "@/features/auth/lib/schemas/loginSchema.ts"
 
 export const Login = () => {
   const themeMode = useAppSelector(selectThemeMode)
@@ -61,13 +61,7 @@ export const Login = () => {
           <FormGroup>
             <TextField label="Email" margin="normal" error={!!errors.email} {...register("email")} />
             {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
-            <TextField
-              type="password"
-              label="Password"
-              error={!!errors.password}
-              margin="normal"
-              {...register("password")}
-            />
+            <TextField type="password" label="Password" error={!!errors.password} {...register("password")} />
             {errors.password && <span className={s.errorMessage}>{errors.password.message}</span>}
             <FormControlLabel
               label={"Remember me"}
