@@ -3,7 +3,7 @@ import { Main } from "@/app/Main.tsx"
 import { Login } from "@/features/features/auth/ui/Login/Login.tsx"
 import { PageNotFound } from "@/common/components/PageNotFound/PageNotFound.tsx"
 
-const Patch = {
+export const Path = {
   Main: "/",
   Login: "/login",
   PageNotFound: "*",
@@ -12,9 +12,9 @@ const Patch = {
 export const Routing = () => {
   return (
     <Routes>
-      <Route path={Patch.Main} element={<Main />} />
-      <Route path={Patch.Login} element={<Login />} />
-      <Route path={Patch.PageNotFound} element={<PageNotFound />} />
+      <Route path={Path.Main} element={<Main />} />
+      <Route path={Path.Login} element={<Login />} />
+      <Route path={Path.PageNotFound} element={<PageNotFound />} />
     </Routes>
   )
 }

@@ -1,7 +1,7 @@
 import { domainTodolistSchema, Todolist } from "@/features/todolists/api/todolistsApi.types.ts"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
 import { createAppSlice } from "@/common/utils/createAppSlice.ts"
-import { setAppErrorAC, setAppStatusAC } from "@/app/app-slice.ts"
+import { setAppStatusAC } from "@/app/app-slice.ts"
 import { RequestStatus } from "@/common/types"
 import { ResultCode } from "@/common/enums"
 import { handleServerAppError } from "@/common/utils/handleServerAppError.ts"
@@ -45,13 +45,11 @@ export const todolistsSlice = createAppSlice({
               dispatch(setAppStatusAC({ status: "succeeded" }))
               return res.data.data.item
             } else {
-              dispatch(setAppErrorAC({ error: res.data.messages[0] }))
-              dispatch(setAppStatusAC({ status: "failed" }))
+              handleServerAppError(res.data, dispatch)
               return rejectWithValue(null)
             }
-          } catch (error: any) {
-            dispatch(setAppErrorAC({ error: error.message }))
-            dispatch(setAppStatusAC({ status: "failed" }))
+          } catch (error) {
+            handleServerNetworkError(dispatch, error)
             return rejectWithValue(error)
           }
         },
