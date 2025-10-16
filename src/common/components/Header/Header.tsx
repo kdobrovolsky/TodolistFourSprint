@@ -10,17 +10,28 @@ import IconButton from "@mui/material/IconButton"
 import Switch from "@mui/material/Switch"
 import Toolbar from "@mui/material/Toolbar"
 import { LinearProgress } from "@mui/material"
-
+import { logoutTC, selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
+import { Navigate } from "react-router/internal/react-server-client"
+import { Path } from "@/common/routing/Routing.tsx"
 
 export const Header = () => {
   const themeMode = useAppSelector(selectThemeMode)
   const status = useAppSelector(selectAppStatus)
+  const isLoggedIn = useAppSelector(selectIsLoggedIn)
   const dispatch = useAppDispatch()
 
   const theme = getTheme(themeMode)
 
   const changeMode = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
+  }
+
+  if (!isLoggedIn) {
+    return <Navigate to={Path.Login} />
+  }
+
+  const isLoggedInHandler = () => {
+    dispatch(logoutTC())
   }
 
   return (
@@ -31,16 +42,13 @@ export const Header = () => {
             <MenuIcon />
           </IconButton>
           <div>
-            <NavButton>Sign in</NavButton>
-            <NavButton>Sign up</NavButton>
+            {isLoggedIn && <NavButton onClick={isLoggedInHandler}>Logout</NavButton>}
             <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
             <Switch color={"default"} onChange={changeMode} />
           </div>
         </Container>
       </Toolbar>
-      {
-        status === 'loading' && <LinearProgress variant="indeterminate"  />
-      }
+      {status === "loading" && <LinearProgress variant="indeterminate" />}
     </AppBar>
   )
 }
