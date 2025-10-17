@@ -27,10 +27,12 @@ export const todolistsSlice = createAppSlice({
           }
         },
         {
-          fulfilled: (state, action) => {
-            action.payload.todolists.forEach((tl) => {
-              state.push({ ...tl, filter: "all", entityStatus: "idle" })
-            })
+          fulfilled: (_, action) => {
+            return action.payload.todolists.map((tl) => ({
+              ...tl,
+              filter: "all" as const,
+              entityStatus: "idle" as const,
+            }))
           },
         },
       ),
@@ -41,7 +43,6 @@ export const todolistsSlice = createAppSlice({
             dispatch(setAppStatusAC({ status: "loading" }))
             const res = await todolistsApi.createTodolist(title)
             if (res.data.resultCode === ResultCode.Success) {
-              domainTodolistSchema.parse(res.data.data.item)
               dispatch(setAppStatusAC({ status: "succeeded" }))
               return res.data.data.item
             } else {
@@ -67,7 +68,6 @@ export const todolistsSlice = createAppSlice({
             dispatch(changeTodolistStatusAC({ id, status: "loading" }))
             const res = await todolistsApi.deleteTodolist(id)
             if (res.data.resultCode === ResultCode.Success) {
-              domainTodolistSchema.parse(res.data)
               dispatch(setAppStatusAC({ status: "succeeded" }))
               return { id }
             } else {
@@ -96,7 +96,6 @@ export const todolistsSlice = createAppSlice({
             const res = await todolistsApi.changeTodolistTitle(arg)
 
             if (res.data.resultCode === ResultCode.Success) {
-              domainTodolistSchema.array().parse(res.data)
               dispatch(setAppStatusAC({ status: "succeeded" }))
               return arg
             } else {

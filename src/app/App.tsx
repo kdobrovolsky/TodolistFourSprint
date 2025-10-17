@@ -18,7 +18,9 @@ export const App = () => {
   const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
-    dispatch(initializeAppTC()).finally(() => setIsInitialized(true))
+    dispatch(initializeAppTC()).finally(() => {
+      setIsInitialized(true)
+    })
   }, [])
 
   if (!isInitialized) {
