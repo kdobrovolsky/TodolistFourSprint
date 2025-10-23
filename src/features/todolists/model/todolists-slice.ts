@@ -1,7 +1,7 @@
 import { domainTodolistSchema, Todolist } from "@/features/todolists/api/todolistsApi.types.ts"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
 import { createAppSlice } from "@/common/utils/createAppSlice.ts"
-import { setAppStatusAC } from "@/app/app-slice.ts"
+import { setAppStatusAC } from "@/app/appSlice.ts"
 import { RequestStatus } from "@/common/types"
 import { ResultCode } from "@/common/enums"
 import { handleServerAppError } from "@/common/utils/handleServerAppError.ts"

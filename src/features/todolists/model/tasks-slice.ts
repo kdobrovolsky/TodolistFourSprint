@@ -3,7 +3,7 @@ import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import { DomainTask, domainTaskSchema, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types.ts"
 import { ResultCode } from "@/common/enums"
 import { RootState } from "@/app/store.ts"
-import { setAppStatusAC } from "@/app/app-slice.ts"
+import { setAppStatusAC } from "@/app/appSlice.ts"
 import { handleServerNetworkError } from "@/common/utils/handleServerNetworkError.ts"
 import { handleServerAppError } from "@/common/utils/handleServerAppError.ts"
 

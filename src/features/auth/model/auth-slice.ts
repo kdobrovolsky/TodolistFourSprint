@@ -1,6 +1,6 @@
 import { LoginInputs } from "@/features/auth/lib/schemas/loginSchema.ts"
 import { createAppSlice } from "@/common/utils/createAppSlice.ts"
-import { setAppStatusAC } from "@/app/app-slice.ts"
+import { setAppStatusAC } from "@/app/appSlice.ts"
 import { ResultCode } from "@/common/enums"
 import { handleServerAppError } from "@/common/utils/handleServerAppError.ts"
 import { handleServerNetworkError } from "@/common/utils/handleServerNetworkError.ts"
