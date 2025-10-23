@@ -5,6 +5,7 @@ import { appReducer, appSlice } from "@/app/appSlice.ts"
 import { authReducer, authSlice } from "@/features/auth/model/auth-slice.ts"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
 import { setupListeners } from "@reduxjs/toolkit/query"
+import { baseApi } from "@/src/app/baseApi.ts"
 
 // создание store
 export const store = configureStore({
@@ -13,9 +14,9 @@ export const store = configureStore({
     [todolistsSlice.name]: todolistsReducer,
     [appSlice.name]: appReducer,
     [authSlice.name]: authReducer,
-    [todolistsApi.reducerPath]: todolistsApi.reducer,
+    [baseApi.reducerPath]: baseApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(todolistsApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
 })
 
 // автоматическое определение типа всего объекта состояния
