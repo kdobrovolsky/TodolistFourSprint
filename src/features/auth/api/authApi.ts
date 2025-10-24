@@ -1,5 +1,4 @@
 import { LoginInputs } from "@/features/auth/lib/schemas/loginSchema.ts"
-import { instance } from "@/common/instance"
 import { BaseResponse } from "@/common/types"
 import { baseApi } from "@/src/app/baseApi.ts"
 
@@ -9,14 +8,14 @@ export const authApi = baseApi.injectEndpoints({
       query: () => "auth/me",
     }),
 
-    login: build.mutation<BaseResponse<{ userId: number; token: string }, LoginInputs>>({
+    login: build.mutation<BaseResponse<{ userId: number; token: string }>, LoginInputs>({
       query: (payload) => ({
         url: "auth/login",
         method: "POST",
         body: payload,
       }),
     }),
-    logout: build.mutation<BaseResponse, string>({
+    logout: build.mutation<BaseResponse, void>({
       query: () => ({
         url: "auth/login",
         method: "DELETE",
@@ -25,14 +24,4 @@ export const authApi = baseApi.injectEndpoints({
   }),
 })
 
-export const _authApi = {
-  login(payload: LoginInputs) {
-    return instance.post<BaseResponse<{ userId: number; token: string }>>("auth/login", payload)
-  },
-  logout() {
-    return instance.delete<BaseResponse>("auth/login")
-  },
-  me() {
-    return instance.get<BaseResponse<{ id: number; email: string; login: string }>>("auth/me")
-  },
-}
+export const { useMeQuery, useLogoutMutation, useLoginMutation } = authApi
