@@ -13,7 +13,6 @@ import { Controller, useForm } from "react-hook-form"
 import s from "./Login.module.css"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LoginInputs, loginSchema } from "@/features/auth/lib/schemas/loginSchema.ts"
-
 import { Navigate } from "react-router/internal/react-server-client"
 import { Path } from "@/common/routing/Routing.tsx"
 import { useLoginMutation } from "@/features/auth/api/authApi.ts"

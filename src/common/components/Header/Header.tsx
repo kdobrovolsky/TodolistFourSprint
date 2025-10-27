@@ -21,6 +21,7 @@ import { Path } from "@/common/routing/Routing.tsx"
 import { useLogoutMutation } from "@/features/auth/api/authApi.ts"
 import { AUTH_TOKEN } from "@/common/constants"
 import { ResultCode } from "@/common/enums"
+import { baseApi } from "@/src/app/baseApi.ts"
 
 export const Header = () => {
   const themeMode = useAppSelector(selectThemeMode)
@@ -40,12 +41,14 @@ export const Header = () => {
   }
 
   const isLoggedInHandler = () => {
-    logoutMutation().then((res) => {
-      if (res.data?.resultCode === ResultCode.Success) {
-        dispatch(setIsLoggedInAC({ isLoggedIn: false }))
-        localStorage.removeItem(AUTH_TOKEN)
-      }
-    })
+    logoutMutation()
+      .then((res) => {
+        if (res.data?.resultCode === ResultCode.Success) {
+          dispatch(setIsLoggedInAC({ isLoggedIn: false }))
+          localStorage.removeItem(AUTH_TOKEN)
+        }
+      })
+      .then(() => dispatch(baseApi.util.invalidateTags(["Todolist", "Tasks"])))
   }
 
   return (
