@@ -4,7 +4,7 @@ import { RequestStatus } from "@/common/types"
 export const appSlice = createSlice({
   name: "app",
   initialState: {
-    themeMode: "light" as ThemeMode,
+    themeMode: (localStorage.getItem("theme") || "light") as ThemeMode,
     status: "idle" as RequestStatus,
     error: null as null | string,
     isLoggedIn: false,
@@ -25,6 +25,7 @@ export const appSlice = createSlice({
     return {
       changeThemeModeAC: create.reducer<{ themeMode: ThemeMode }>((state, action) => {
         state.themeMode = action.payload.themeMode
+        localStorage.setItem("theme", action.payload.themeMode)
       }),
       setAppStatusAC: create.reducer<{ status: RequestStatus }>((state, action) => {
         state.status = action.payload.status

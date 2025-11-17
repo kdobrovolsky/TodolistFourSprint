@@ -48,7 +48,7 @@ export const Header = () => {
           localStorage.removeItem(AUTH_TOKEN)
         }
       })
-      .then(() => dispatch(baseApi.util.invalidateTags(["Todolist", "Tasks"])))
+      .then(() => dispatch(baseApi.util.invalidateTags(["Todolist"])))
   }
 
   return (
@@ -60,7 +60,6 @@ export const Header = () => {
           </IconButton>
           <div>
             {isLoggedIn && <NavButton onClick={isLoggedInHandler}>Logout</NavButton>}
-
             <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
             <Switch color={"default"} onChange={changeMode} />
           </div>
